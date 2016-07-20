@@ -1,8 +1,5 @@
-var path = require('path');
-var webpack = require('webpack');
-
 module.exports = {
-    entry: './src/app.js',
+    entry: './src/app.js'],
     output: {
         path      : __dirname,
         filename  : './dist/bundle.js'
@@ -16,9 +13,9 @@ module.exports = {
             loader : 'babel-loader',
             exclude: /node_modules/,
             query  : {
-                presets: ['es2015', 'react']
+                presets: ['es2015', 'react'],
+                plugins: ['transform-runtime']
             }
         }]
     }
-
 }
