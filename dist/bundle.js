@@ -72,12 +72,14 @@
 	    title: "Read the Book",
 	    description: "I should read the whole book",
 	    status: "in-progress",
+	    color: "#BD8D31",
 	    tasks: []
 	}, {
 	    id: 2,
 	    title: "Write some code",
 	    description: "Code along with the samples in the book",
 	    status: "todo",
+	    color: "#3A7E28",
 	    tasks: [{
 	        id: 1,
 	        name: "ContactList Exambple",
@@ -21299,27 +21301,41 @@
 	    function Card() {
 	        _classCallCheck(this, Card);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Card).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Card).apply(this, arguments));
+
+	        _this.state = {
+	            showDetails: false
+	        };
+	        return _this;
 	    }
 
 	    _createClass(Card, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+
+	            var cardDetails = void 0;
+	            //showDetails가 true 면 detail 화면을 랜더링 한다.
+	            if (this.state.showDetails) {
+	                cardDetails = _react2.default.createElement(
+	                    'div',
+	                    { className: 'card__details' },
+	                    this.props.description,
+	                    _react2.default.createElement(_CheckList2.default, { cardId: this.props.id, tasks: this.props.tasks })
+	                );
+	            };
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'card' },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'card__title' },
+	                    { className: 'card__title', onClick: function onClick() {
+	                            return _this2.setState({ showDetails: !_this2.state.showDetails });
+	                        } },
 	                    this.props.title
 	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'card__details' },
-	                    this.props.description,
-	                    _react2.default.createElement(_CheckList2.default, { cardId: this.props.id,
-	                        tasks: this.props.tasks })
-	                )
+	                cardDetails
 	            );
 	        }
 	    }]);

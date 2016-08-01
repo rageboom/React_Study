@@ -7,15 +7,17 @@ let cardsList = [
     {
         id           : 1,
         title        : "Read the Book",
-        description : "I should read the whole book",
+        description  : "I should read the whole book",
         status       : "in-progress",
-        tasks         : []
+        color        : "#BD8D31",
+        tasks        : []
     }, {
         id           : 2,
         title        : "Write some code",
-        description : "Code along with the samples in the book",
+        description  : "Code along with the samples in the book",
         status       : "todo",
-        tasks         : [
+        color        : "#3A7E28",
+        tasks        : [
             {
                 id  : 1,
                 name: "ContactList Exambple",
