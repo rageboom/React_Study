@@ -21310,10 +21310,13 @@
 	    }
 
 	    _createClass(Card, [{
+	        key: 'toggleDetails',
+	        value: function toggleDetails() {
+	            this.setState({ showDetails: !this.state.showDetails });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
-
 	            var cardDetails = void 0;
 	            //showDetails가 true 면 detail 화면을 랜더링 한다.
 	            if (this.state.showDetails) {
@@ -21330,9 +21333,7 @@
 	                { className: 'card' },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'card__title', onClick: function onClick() {
-	                            return _this2.setState({ showDetails: !_this2.state.showDetails });
-	                        } },
+	                    { className: 'card__title', onClick: this.toggleDetails.bind(this) },
 	                    this.props.title
 	                ),
 	                cardDetails
