@@ -11,6 +11,10 @@ class Card extends Component {
         };
     }
 
+    toggleDetails() {
+        this.setState({showDetails: !this.state.showDetails});
+    }
+
     render() {
         let cardDetails;
         //showDetails가 true 면 detail 화면을 랜더링 한다.
@@ -26,8 +30,9 @@ class Card extends Component {
         return (
             <div className="card">
                 <div className="card__title" onClick={
-                    ()=>this.setState({showDetails: !this.state.showDetails})
-                }>{this.props.title}</div>
+                    ()=>this.setState({showDetails: !this.toggleDetails.bind(this)}>
+                    {this.props.title}
+                </div>
                 {cardDetails}
             </div>
         );
