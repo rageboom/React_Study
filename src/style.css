@@ -120,3 +120,11 @@ ul {
     overflow: hidden;
     transition: max-height .25s ease-out;
 }
+
+.checklist--add-task {
+    border       : 1px dashed #bbb;
+    width        : 100%;
+    padding      : 10px;
+    margin-top   : 5px;
+    border-radius: 3px;
+}
