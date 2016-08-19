@@ -50,7 +50,7 @@ class KanbanBoardContainer extends Component {
         this.setState({cards: nextState});
 
         //API를 호출해 서버에 해당 태스크를 추가한다.
-        fetch('${API_URL}/cards/${cardId}/task', {
+        fetch(`${API_URL}/cards/${cardId}/tasks`, {
             method : 'post',
             headers: API_HEADERS,
             body   : JSON.stringify(newTask)
@@ -65,7 +65,7 @@ class KanbanBoardContainer extends Component {
                 throw new ("Server response wasn't OK")
             }
         })
-        .then((responseDat) => {
+        .then((responseData) => {
             //서버가 새로운 태스크를 추가하는 데 이용한
             //확정 ID를 변환하면 리액트에서 ID를 업데이트 한다.
             newTask.id = responseData.id;
@@ -94,7 +94,7 @@ class KanbanBoardContainer extends Component {
         this.setState({cards: nextState});
 
         //API를 호출해 서버에서 해당 태스크를 제거한다.
-        fetch('${API_URL}/cards/${cardId}/tasks/${taskId}', {
+        fetch(`${API_URL}/cards/${cardId}/tasks/${taskId}`, {
             method : 'delete',
             headers: API_HEADERS
         })
@@ -141,7 +141,7 @@ class KanbanBoardContainer extends Component {
         this.setState({cards: nextState});
 
         //API를 호출햇 서버에서 해당 태스크를 토글한다.
-        fetch('${API_URL}/cards/${cardId}/tasks/${taskId}', {
+        fetch(`${API_URL}/cards/${cardId}/tasks/${taskId}`, {
             method: 'put',
             headers: API_HEADERS,
             body: JSON.stringify({done: newDoneValue})
