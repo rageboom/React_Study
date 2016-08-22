@@ -14,7 +14,7 @@ const ShoppingCartSpec = {
     drop() {
         return {name: 'ShoppingCart'};
     }
-}
+};
 
 // ShoppingCart DropTarget - collect
 // 콜랙팅 함수
@@ -33,11 +33,13 @@ class ShoppingCart extends Component {
         const isActive = canDrop && isOver;
 
         let backgroundColor = '#ffffff';
+
         if (isActive) {
             backgroundColor = '#f7f7bd';
         } else if (canDrop) {
             backgroundColor = '#f7f7f7';
         }
+
         const style = {
             backgroundColor: '#ffffff'
         };
@@ -55,8 +57,8 @@ class ShoppingCart extends Component {
 
 ShoppingCart.propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
-    isOver: PropTypes.bool.isRequired,
-    canDrop: PropTypes.bool.isRequired
+    isOver           : PropTypes.bool.isRequired,
+    canDrop          : PropTypes.bool.isRequired
 }
 
 export default DropTarget("snack", ShoppingCartSpec, collect)(ShoppingCart);

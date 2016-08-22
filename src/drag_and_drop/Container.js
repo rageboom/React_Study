@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import ReactDOM, {render} from 'react-dom';
 import ShoppingCart from './ShoppingCart';
 import Snack from './Snack';
-import { DragDropContext} from 'react-dnd';
+import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 class Container extends Component {
