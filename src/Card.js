@@ -1,7 +1,10 @@
 import React,{Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import CheckList from './CheckList';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import marked from 'marked';
+import {DragSource, DropTarget} from 'react-dnd';
+import constants from './constants';
+import CheckList from './CheckList';
 
 let titlePropType = (props, propName, componentName) => {
     if (props[propName]) {
@@ -13,6 +16,38 @@ let titlePropType = (props, propName, componentName) => {
         }
     }
 }
+
+const cardDragSpec = {
+    beginDrag(props) {
+        return {
+            id    : props.id,
+            status: props.status
+        };
+    },
+    endDrag(props) {
+        props.cardCallbacks.persistCardDrag(props.id, props.status);
+    }
+}
+
+const cardDropSpec = {
+    hover(props, monitor) {
+        const draggedId = monitor.getItem().id;
+        props.cardCallbacks.updatePosition(draggedId, props.id);
+    }
+}
+
+let collectDrag = (connect, monitor) => {
+    return {
+        connectDragSource: connect.dragSource()
+    };
+}
+
+let collectDrop = (connect, monitor) => {
+    return {
+        connectDropTarget: connect.dropTarget()
+    };
+}
+
 class Card extends Component {
     constructor() {
         super(...arguments);
@@ -26,6 +61,8 @@ class Card extends Component {
     }
 
     render() {
+        const {connectDragSource, connectDropTarget} = this.props;
+
         let cardDetails;
         //showDetails가 true 면 detail 화면을 랜더링 한다.
         if (this.state.showDetails) {
@@ -37,7 +74,7 @@ class Card extends Component {
                                taskCallbacks={this.props.taskCallbacks} />
                 </div>
             );
-        };
+        }
 
         let sideColor = {
             position: 'absolute',
@@ -49,7 +86,7 @@ class Card extends Component {
             backgroundColor: this.props.color
         };
 
-        return (
+        return connectDropTarget(connectDragSource(
             <div className="card">
                 <div style={sideColor}/>
                 <div className={
@@ -57,11 +94,15 @@ class Card extends Component {
                 } onClick={this.toggleDetails.bind(this)}>
                     {this.props.title}
                 </div>
+                <ReactCSSTransitionGroup transitionName="toggle"
+                      transitionEnterTimeout={250}
+                      transitionLeaveTimeout={250} >
                 {cardDetails}
+                </ ReactCSSTransitionGroup>
             </div>
-        );
+        ));
     }
-};
+}
 
 Card.propTypes = {
     id           : PropTypes.number,
@@ -69,7 +110,15 @@ Card.propTypes = {
     description  : PropTypes.string,
     color        : PropTypes.string,
     tasks        : PropTypes.arrayOf(PropTypes.object),
-    taskCallbacks: PropTypes.object
+    taskCallbacks: PropTypes.object,
+    cardCallbacks: PropTypes.object,
+    connectDragSource: PropTypes.func.isRequired,
+    connectDropTarget: PropTypes.func.isRequired
 };
 
-export default Card;
+let dragHighOrderCard = DragSource(constants.CARD, cardDragSpec,
+      collectDrag)(Card);
+let dragDropHighOrderCard = DropTarget(constants.CARD, cardDropSpec,
+      collectDrop)(dragHighOrderCard);
+
+export default dragDropHighOrderCard;

@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import ReactDOM, {render} from 'react-dom';
 import update from 'react-addons-update';
+import {throttle} from './utils';
 import KanbanBoard from './KanbanBoard';
+// 폴리필
 import 'babel-polyfill';
 import 'whatwg-fetch';
 
@@ -17,6 +19,10 @@ class KanbanBoardContainer extends Component {
         this.state = {
             cards: [],
         };
+        // 인수가 변경된 경우에만 updateCardStatus를 호출한다.
+        this.updateCardStatus = throttle(this.updateCardStatus.bind(this));
+        // 최대 500ms마다(또는 인수가 변경된 경우) updateCardPosition을 호출한다.
+        this.updateCardPosition = throttle(this.updateCardPosition.bind(this), 500);
     }
 
     componentDidMount() {
@@ -160,13 +166,90 @@ class KanbanBoardContainer extends Component {
         });
     }
 
+    updateCardStatus(cardId, listId) {
+        // 카드의 인덱스를 찾는다.
+        let cardIndex = this.state.cards.findIndex((card)=>card.id == cardId);
+        // 현재 카드를 얻는다.
+        let card = this.state.cards[cardIndex]
+        // 다른 리스트 위로 드래그할 때만 진행한다.
+        if (card.status !== listId) {
+            // 변경된 객체로 컴포넌트 상태를 설정한다.
+            this.setState(update(this.state, {
+                cards: {
+                    [cardIndex]: {
+                        status: {$set: listId}
+                    }
+                }
+            }));
+        }
+    }
+
+    updateCardPosition(cardId, afterId) {
+        // 다른 카드 위로 드래그할 때만 진행한다.
+        if (cardId !== afterId) {
+            // 카드의 인덱스를 찾는다.
+            let cardIndex = this.state.cards.findIndex((card)=>card.id == cardId);
+            // 현재 카드를 얻는다.
+            let card = this.state.cards[cardIndex]
+            // 마우스로 가리키는 카드의 인덱스를 찾는다.
+            let afterIndex = this.state.cards.findIndex((card)=>card.id == afterId);
+            // splice를 이용해 카드를 제거한 후 새로운 인덱스 위치로 삽입힌다.
+            this.setState(update(this.state, {
+                cards: {
+                    $splice: [
+                        [cardIndex, 1],
+                        [afterIndex, 0, card]
+                    ]
+                }
+            }));
+        }
+    }
+
+    persistCardDrag(cardId, status) {
+        // 카드의 인덱스를 찾는다.
+        let cardIndex = this.state.cards.findIndex((card)=>card.id == cardId);
+        // 현재 카드를 얻는다.
+        let card = this.state.cards[cardIndex]
+
+        fetch(`${API_URL}/card/${cardId}`, {
+            method: 'put',
+            headers: API_HEADERS,
+            body: JSON.stringify({status: card.status, row_order_position: cardIndex})
+        })
+        .then((response) => {
+            if(!response.ok){
+                throw new Error("Server response wasn't OK")
+            }
+        })
+        .catch((error) => {
+            console.error("Fetch error:", error);
+            this.setState(
+                update(this.state, {
+                    cards: {
+                        [cardIndex]: {
+                            status: { $set: status}
+                        }
+                    }
+                })
+            );
+        });
+    }
+
     render() {
         return (
-            <KanbanBoard cards={this.state.cards} taskCallbacks={{
+            <KanbanBoard cards={this.state.cards}
+                taskCallbacks={{
                     toggle: this.toggleTask.bind(this),
                     delete: this.deleteTask.bind(this),
-                    add   : this.addTask.bind(this) }}/>
-        );
+                    add   : this.addTask.bind(this)
+                }}
+                cardCallbacks={{
+                    updateStatus  : this.updateCardStatus.bind(this),
+                    updatePosition: this.updateCardPosition.bind(this),
+                    persistCardDrag: this.persistCardDrag.bind(this)
+                }}
+            />
+        )
     }
 }
 

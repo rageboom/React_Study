@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM, {render} from 'react-dom';
 import {DropTarget} from 'react-dnd';
+import constants from './constants';
 
 // ShoppingCart 드래그 앤 드롭 사양
 // "드롭 대상 사양을 구현하는 일반 객체"
@@ -61,4 +62,4 @@ ShoppingCart.propTypes = {
     canDrop          : PropTypes.bool.isRequired
 }
 
-export default DropTarget("snack", ShoppingCartSpec, collect)(ShoppingCart);
+export default DropTarget(constants.SNACK, ShoppingCartSpec, collect)(ShoppingCart);

@@ -1,8 +1,10 @@
 var path = require("path");
 module.exports = {
+    //entry: './src/App.js',
     //entry: './src/animated_shopping/AnimatedShoppingList.js',
-    entry: './src/drag_and_drop/App.js',
-        //Contacts: './src/ContactsAppContainer.js'
+    //entry: './src/drag_and_drop/App.js',
+    entry: './src/route/App.js',
+    //Contacts: './src/ContactsAppContainer.js'
     output: {
         path      : path.join(__dirname, 'js'),
         filename  : './dist/bundle.js'
