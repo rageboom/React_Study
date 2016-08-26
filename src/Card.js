@@ -1,10 +1,10 @@
-import React,{Component, PropTypes} from 'react';
-import ReactDOM from 'react-dom';
+import React,{Component, PropTypes} from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import marked from 'marked';
 import {DragSource, DropTarget} from 'react-dnd';
 import constants from './constants';
 import CheckList from './CheckList';
+import {Link} from 'react-router';
 
 let titlePropType = (props, propName, componentName) => {
     if (props[propName]) {
@@ -89,16 +89,19 @@ class Card extends Component {
         return connectDropTarget(connectDragSource(
             <div className="card">
                 <div style={sideColor}/>
-                <div className={
-                    this.state.showDetails ? "card__title card__title--is-open" : "card__title"
-                } onClick={this.toggleDetails.bind(this)}>
-                    {this.props.title}
-                </div>
-                <ReactCSSTransitionGroup transitionName="toggle"
-                      transitionEnterTimeout={250}
-                      transitionLeaveTimeout={250} >
-                {cardDetails}
-                </ ReactCSSTransitionGroup>
+                <div className="card__edit">
+                    <Link to={'/edit/'+this.props.id}>&#9998;</Link></div>
+                    {/* &#9998;은 utf-8 연필 문자를 나타내는 HTML 엔터티다.*/}
+                    <div className={
+                        this.state.showDetails ? "card__title card__title--is-open" : "card__title"
+                    } onClick={this.toggleDetails.bind(this)}>
+                        {this.props.title}
+                    </div>
+                    <ReactCSSTransitionGroup transitionName="toggle"
+                          transitionEnterTimeout={250}
+                          transitionLeaveTimeout={250} >
+                    {cardDetails}
+                    </ ReactCSSTransitionGroup>
             </div>
         ));
     }
@@ -116,9 +119,9 @@ Card.propTypes = {
     connectDropTarget: PropTypes.func.isRequired
 };
 
-let dragHighOrderCard = DragSource(constants.CARD, cardDragSpec,
+const dragHighOrderCard = DragSource(constants.CARD, cardDragSpec,
       collectDrag)(Card);
-let dragDropHighOrderCard = DropTarget(constants.CARD, cardDropSpec,
+const dragDropHighOrderCard = DropTarget(constants.CARD, cardDropSpec,
       collectDrop)(dragHighOrderCard);
 
 export default dragDropHighOrderCard;

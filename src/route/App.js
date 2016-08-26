@@ -1,48 +1,42 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 
-import {Router, Route, Link} from 'react-router';
+import {Router, Route, Link, IndexRoute} from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+
 import About from './About';
 import Home from './Home';
 import Repos from './Repos';
+import RepoDetails from './RepoDetails';
+import ServerError from './ServerError';
 
 class App extends Component {
-    constructor() {
-        super(...arguments);
-        this.state = {
-            route: window.location.hash.substr(1)
-        };
-    }
-
-    componentDidMount() {
-        window.addEventListener('hashchange', () => {
-            this.setState({
-                route: window.location.hash.substr(1)
-            });
-        });
-    }
     render() {
-        var Child;
-        switch (this.state.route) {
-            case '/about': Child = About; break;
-            case '/repos': Child = Repos; break;
-            default: Child = Home;
-        }
-        console.log(this.state.route);
-
         return (
             <div>
                 <header>App</header>
                 <menu>
                     <ul>
-                        <li><a href="#/about">About</a></li>
-                        <li><a href="#/repos">Repos</a></li>
+                        <li><Link to="/about" activeClassName="active">About</Link></li>
+                        <li><Link to="/repos" activeClassNAme="active">Repos</Link></li>
                     </ul>
                 </menu>
-                <Child/>
+                {this.props.children}
             </div>
         )
     }
 }
 
-render(<App />, document.getElementById('root'));
+render((
+    <Router history={createBrowserHistory()}>
+        <Route path="/" component={App}>
+            <IndexRoute component={Home}/>
+            <Route path="about" component={About}/>
+            <Route path="repos" component={Repos}>
+                {/*UI를 중첩하려는 위치에 라우트를 중첩해 추가한다.*/}
+                <Route path="details/:repo_name" component={RepoDetails} />
+            </Route>
+            <Route path="error" component={ServerError} />
+        </Route>
+    </Router>
+), document.getElementById('root'));
