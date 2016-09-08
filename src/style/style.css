@@ -211,6 +211,21 @@ ul {
     font-size: 14px;
     padding  : 8px;
 }
+.card__edit {
+    position  : absolute;
+    top       : 10px;
+    right     : 10px;
+    opacity   : 0;
+    transition: opacity .25s ease-in;
+}
+.card:hover .card__edit {
+    opacity: 1;
+}
+.card__edit a {
+    text-decoration: none;
+    color          : #999;
+    font-size      : 17px;
+}
 .float-button {
     position       : absolute;
     height         : 56px;
@@ -224,6 +239,6 @@ ul {
     font-size      : 34px;
     text-align     : center;
     text-decoration: none;
-    line_height    : 50px;
+    line-height    : 50px;
     box-shadow     : 0 5px 10px rgba(0, 0, 0, 0.5)
 }

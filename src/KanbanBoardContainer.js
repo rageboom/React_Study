@@ -326,7 +326,7 @@ class KanbanBoardContainer extends Component {
                     updateCard: this.updateCard.bind(this),
                     updateStatus  : this.updateCardStatus.bind(this),
                     updatePosition: throttle(this.updateCardPosition.bind(this), 500),
-                    persistCardDrag: this.persistCardMove.bind(this)
+                    persistCardDrag: this.persistCardDrag.bind(this)
                 }
             }
         );

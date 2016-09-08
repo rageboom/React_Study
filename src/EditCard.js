@@ -5,7 +5,7 @@ import CardForm from './CardForm';
 class EditCard extends Component {
 
     componentWillMount() {
-        let card = this.props.card.find(
+        let card = this.props.cards.find(
             (card)=>card.id == this.props.params.card_id
         );
         this.setState(Object.assign({}, card));
